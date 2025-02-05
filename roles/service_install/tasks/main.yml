@@ -1,0 +1,47 @@
+--- 
+
+- name: Extract a specific tag value (e.g. Name)
+  debug:
+    msg: "The value of the tag 'Service' is {{ hostvars[inventory_hostname]['tags'].Service }}"
+
+- name: install nginx
+  yum:
+    name: nginx 
+    state: present
+  when: hostvars[inventory_hostname]['tags'].get('Service') == 'nginx'
+  
+- name: enable nginx
+  service:
+    name: nginx
+    state: started
+  when: hostvars[inventory_hostname]['tags'].get('Service') == 'nginx'
+
+
+- name: download mysql
+  yum:
+    name: mariadb105
+    state: present 
+  when: hostvars[inventory_hostname]['tags'].get('Service') == 'mysql'
+
+- name: Set MariaDB root password
+  mysql_user:
+    name: root
+    password: "root"
+    host: localhost
+    state: present
+  become_user: mysql
+  when: hostvars[inventory_hostname]['tags'].get('Service') == 'mysql'
+
+- name: Secure MariaDB installation
+  command: mysql_secure_installation
+  args:
+    creates: /var/lib/mysql/mysql.sock
+  when: hostvars[inventory_hostname]['tags'].get('Service') == 'mysql'
+
+#- name: Remove Nginx package
+ # ansible.builtin.package:
+  #  name: nginx
+   # state: absent
+
+
+
