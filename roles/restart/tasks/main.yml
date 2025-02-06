@@ -1,0 +1,12 @@
+- name: download chroni
+  dnf:
+    name: cronie
+    state: present
+
+- name: restart 
+  ansible.builtin.cron:
+    name: "reboot chron job"
+    minute: "0"
+    hour: "{{ hostvars[inventory_hostname]['tags'].hour }}"
+    weekday: "{{ hostvars[inventory_hostname]['tags'].weekday }}"
+    job: "reboot"

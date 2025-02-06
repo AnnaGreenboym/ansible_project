@@ -1,0 +1,25 @@
+
+- block:
+  - name: download repo
+    shell: ' sudo wget https://dev.mysql.com/get/mysql80-community-release-el9-1.noarch.rpm  '
+    ignore_errors: true
+
+  - name: start repo
+    shell: ' sudo dnf install mysql80-community-release-el9-1.noarch.rpm -y '
+
+  - name: unzip
+    shell: ' sudo rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2023'
+  
+  - name: Install mysql client
+    yum:
+      name: mysql-community-client
+      state: present
+      
+  - name: mysql  server
+    shell: ' sudo dnf install mysql-community-server -y '
+
+  - name: enable
+    shell: ' sudo systemctl start mysqld.service '
+
+  when: hostvars[inventory_hostname]['tags'].get('Service') == 'mysql'
+

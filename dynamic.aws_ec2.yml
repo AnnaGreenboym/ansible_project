@@ -12,7 +12,9 @@ filters:
   instance-state-name:
     - running
 
-
+# creates group from the all my hosts
+#in this case create separeted groups per different values of Service tag
 keyed_groups:
-  - key: tags['Name']
+  - key: tags.Service
+    separator: "" 
 

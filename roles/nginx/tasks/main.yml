@@ -1,0 +1,27 @@
+--- 
+- name: Extract a specific tag value
+  debug:
+    msg: "The value of the tag 'Service' is {{ hostvars[inventory_hostname]['tags'].Service }}"
+
+- block:
+  - name: install nginx
+    yum:
+      name: nginx
+      state: present
+
+  - name: enable nginx
+    service:
+      name: nginx
+      state: started
+
+  when: hostvars[inventory_hostname]['tags'].get('Service') == 'nginx'
+
+
+
+#- name: Remove Nginx package
+ # ansible.builtin.package:
+  #  name: nginx
+   # state: absent
+
+
+
